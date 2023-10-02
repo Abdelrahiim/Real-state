@@ -9,5 +9,5 @@ app.get("/",(req, res)=>{
 })
 
 app.listen(PORT,()=>{
-    console.log(`Dev Server Started At PORT ${chalk.greenBright(PORT)} `)
+    console.log(`Dev Server Started At PORT ${chalk.bgCyanBright(`http://localhost:${PORT}`)} `)
 })

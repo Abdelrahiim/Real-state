@@ -1,7 +1,10 @@
 {
-  "name": ".",
+  "name": "real-state-api",
   "module": "server.ts",
   "type": "module",
+  "scripts": {
+    "dev": "bun --watch run server.ts"
+  },
   "devDependencies": {
     "@types/express": "^4.17.18",
     "bun-types": "latest"
