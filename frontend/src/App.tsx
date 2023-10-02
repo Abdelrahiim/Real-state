@@ -1,12 +1,41 @@
+import {createBrowserRouter, RouterProvider} from "react-router-dom"
+import Layout from "./components/Layout.tsx";
+import {AboutPage, HomePage, ProfilePage, SignInPage, SignUpPage} from "./pages";
 
 
+const router = createBrowserRouter([
+	{
+		path: '/',
+		element: <Layout/>,
+		children: [
+			{
+				index: true,
+				element: <HomePage/>
+			},
+			{
+				path: "/about",
+				element: <AboutPage/>
+			},
+			{
+				path: "profile",
+				element: <ProfilePage/>
+			},
+			{
+				path: "sign-in",
+				element: <SignInPage/>
+			},
+			{
+				path: "sign-up",
+				element: <SignUpPage/>
+			}
+		]
+	}
+])
 
 function App() {
-    return (
-        <div className="flex flex-col">
-            <h1 className="bg-blue-500">Hello For SSR React With Bun Which is Blazing Fast With ts</h1>
-        </div>
-    )
+	return (
+		<RouterProvider router={router}/>
+	)
 }
 
 export default App
