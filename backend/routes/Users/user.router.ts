@@ -4,7 +4,8 @@ import UserController from "./user.controller.ts";
 
 const UserRouter = Router();
 
-UserRouter.post("/",UserController.signUp)
+UserRouter.post("/auth/sign-up/",UserController.signUp)
+// just For Development
 UserRouter.get("/",UserController.list)
 
 

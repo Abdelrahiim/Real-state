@@ -21,7 +21,7 @@ const Header = () => {
             className={({isActive}) => (isActive ? "underline" : "")} to={"about"}>About</NavLink></li>
           <li className={"text-slate-700 hover:underline"}><NavLink
             className={({isActive}) => (isActive ? "underline" : "")}
-            to={"sign-in"}>Sign In</NavLink></li>
+            to={"sign-up"}>Sign Up</NavLink></li>
         </ul>
       </nav>
     </header>
