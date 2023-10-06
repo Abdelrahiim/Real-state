@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import {StatusCodes} from "http-status-codes";
-import {User} from "../../Types.ts";
-import {createNewUser, listAllUsers} from "../../models/user.model.ts";
+import {SignInUser, User} from "../../Types.ts";
+import {authenticate, createNewUser, listAllUsers} from "../../models/user.model.ts";
 import {BadRequest} from "http-errors";
+import {faker} from "@faker-js/faker";
 
 /**
  * Sign Up Controller Function that Create The new User
@@ -26,7 +27,18 @@ async function signUp(req: Request<{}, {}, User>, res: Response, next: NextFunct
     })
     // next(e)
   }
+}
 
+
+async function signIn(req: Request<{}, {}, SignInUser>, res: Response) {
+  console.log(req.body)
+  const {username, password} = req.body
+  try {
+    const [token,user] = await authenticate(username, password)
+    return res.status(StatusCodes.OK).json({token,user})
+  } catch (e: any) {
+    return res.status(e.statusCode).json({error: e.message})
+  }
 
 }
 
@@ -38,5 +50,6 @@ async function list(req: Request, res: Response) {
 
 export default {
   signUp,
+  signIn,
   list
 }

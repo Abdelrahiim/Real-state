@@ -1,8 +1,9 @@
 import {ActionFunctionArgs, Form, Link, redirect, useActionData, useNavigation} from "react-router-dom";
+
 import {LoginData, signupUser} from "../api.ts";
 
 
-enum Status {
+export enum Status {
   Idle = "idle",
   Submitting = "submitting",
   Loading = "loading"
@@ -19,13 +20,9 @@ export const action = async ({request}: ActionFunctionArgs) => {
   try {
     await signupUser(user)
     return redirect("/")
-  } catch (e){
+  } catch (e) {
     return e
   }
-
-
-
-
 }
 
 
@@ -35,7 +32,6 @@ const SignUpPage = () => {
 
   // @ts-ignore
   const _action = useActionData()
-
 
 
   return (
