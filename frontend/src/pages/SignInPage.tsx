@@ -45,14 +45,14 @@ const SignInPage = () => {
     e.preventDefault();
     try {
       dispatch(signInStart())
-      const res = await signInUser(formData)
-      signIn(
-        {
-          token: res.data.token,
-          expiresIn: 30,
-          tokenType: "Bearer"
-        })
-      dispatch(signInSuccess(res.data.user))
+      const response = await signInUser(formData)
+      signIn({
+        token: response.data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: {email: formData.email},
+      })
+      dispatch(signInSuccess(response.data.user))
       navigate("/", {
         replace: true,
       });
@@ -94,7 +94,7 @@ const SignInPage = () => {
             </svg>
             Loading..</>}
         </button>
-        <Oauth />
+        <Oauth/>
 
       </form>
       <div className='flex gap-2 mt-5'>

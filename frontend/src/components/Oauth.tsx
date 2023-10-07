@@ -11,22 +11,21 @@ const Oauth = () => {
   const navigate= useNavigate()
   const handleGoogleClick = async () => {
     try {
-
       const provider = new GoogleAuthProvider()
       const auth = getAuth(app)
       const result = await signInWithPopup(auth, provider)
-
       const response = await signInGoogle({
         displayName: result.user.displayName as string,
         email: result.user.email as string,
         photoURL: result.user.photoURL as string
       })
-      signIn(
-        {
-          token: response.data.token,
-          expiresIn: 30,
-          tokenType: "Bearer"
-        })
+
+      signIn({
+        token: response.data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: { email: response.data.user.email },
+      })
       dispatch(signInSuccess(response.data.user))
       navigate("/", {
         replace: true,

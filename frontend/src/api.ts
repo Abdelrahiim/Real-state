@@ -22,7 +22,8 @@ export interface SignInWithGoogleData{
 export interface User {
   _id: string,
   username: string,
-  email: string
+  email: string,
+  avatar:string
 }
 
 interface SignInResponse {
@@ -52,7 +53,6 @@ export const signInGoogle = async (credentials: SignInWithGoogleData) => {
     username : credentials.displayName ,
     email:credentials.email,
     photoURL:credentials.photoURL
-
   }
   try {
     return await axios.post(`${baseUrl}/user/auth/google`, data) as AxiosResponse<SignInResponse>

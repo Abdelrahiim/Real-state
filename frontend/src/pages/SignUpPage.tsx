@@ -43,14 +43,14 @@ const SignUpPage = () => {
     e.preventDefault();
     try {
       dispatch(signInStart())
-      const res = await signupUser(formData)
-      signIn(
-        {
-          token: res.data.token,
-          expiresIn: 30,
-          tokenType: "Bearer"
-        })
-      dispatch(signInSuccess(res.data.user))
+      const response = await signupUser(formData)
+      signIn({
+        token: response.data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: { email: formData.email },
+      })
+      dispatch(signInSuccess(response.data.user))
       navigate("/", {
         replace: true,
       });
