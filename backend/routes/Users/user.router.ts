@@ -6,8 +6,8 @@ const UserRouter = Router();
 
 UserRouter.post("/auth/sign-up/",UserController.signUp)
 UserRouter.post("/auth/sign-in/",UserController.signIn)
-// just For Development
-UserRouter.get("/",UserController.list)
-
+UserRouter.post("/auth/google",UserController.signInWithGoogle )
+// just For
+UserRouter.get('/',UserController.list)
 
 export default UserRouter

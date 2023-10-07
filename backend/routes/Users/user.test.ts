@@ -45,7 +45,7 @@ describe("Test Api User EndPoints", () => {
       password: faker.internet.password()
     }
     const inValidUser = {
-      username: faker.internet.userName(),
+      email: faker.internet.email(),
       password: faker.internet.password()
 
     }
@@ -67,7 +67,7 @@ describe("Test Api User EndPoints", () => {
     describe("Test Sign In Functionality", () => {
       test("it Should Return 200 And Content-Type = Application/json", async () => {
         const response = await Client.post("/api/user/auth/sign-in").send({
-          username: user.username,
+          email: user.email,
           password: user.password
         }).expect(StatusCodes.OK)
       })

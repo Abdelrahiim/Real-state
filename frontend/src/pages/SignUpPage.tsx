@@ -1,48 +1,91 @@
-import {ActionFunctionArgs, Form, Link, redirect, useActionData, useNavigation} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 import {LoginData, signupUser} from "../api.ts";
+import {ChangeEvent, FormEvent, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+import {signInFailure, signInStart, signInSuccess, Status} from "../features/user/userSlice.ts";
+import {AxiosError} from "axios";
+import Oauth from "../components/Oauth.tsx";
 
 
-export enum Status {
-  Idle = "idle",
-  Submitting = "submitting",
-  Loading = "loading"
-}
-
-export const action = async ({request}: ActionFunctionArgs) => {
-
-  const formDate = await request.formData();
-  const user: LoginData = {
-    email: formDate.get("email") as string,
-    password: formDate.get("password") as string,
-    username: formDate.get("username") as string
-  }
-  try {
-    await signupUser(user)
-    return redirect("/")
-  } catch (e) {
-    return e
-  }
-}
+// export const action = async ({request}: ActionFunctionArgs) => {
+//
+//   const formDate = await request.formData();
+//   const user: LoginData = {
+//     email: formDate.get("email") as string,
+//     password: formDate.get("password") as string,
+//     username: formDate.get("username") as string
+//   }
+//   try {
+//     await signupUser(user)
+//     return redirect("/")
+//   } catch (e) {
+//     return e
+//   }
+// }
 
 
 const SignUpPage = () => {
-  const navigation = useNavigation();
-  const status = navigation.state
-
-  // @ts-ignore
-  const _action = useActionData()
-
-
+  const [formData, setFormData] = useState<LoginData>({email: "", password: "", username: ""});
+  const {status, error} = useSelector((state: RootState) => state.user)
+  const signIn = useSignIn()
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      dispatch(signInStart())
+      const res = await signupUser(formData)
+      signIn(
+        {
+          token: res.data.token,
+          expiresIn: 30,
+          tokenType: "Bearer"
+        })
+      dispatch(signInSuccess(res.data.user))
+      navigate("/", {
+        replace: true,
+      });
+    } catch (err) {
+      const e = err as AxiosError<{ error: string }>
+      dispatch(signInFailure(e?.response?.data.error as string));
+    }
+  };
   return (
-    <div className={"p-3 max-w-xl mx-auto"}>
-      <h1 className={"text-3xl text-center font-semibold my-7"}>
-        Sign Up
-      </h1>
-      <Form className={'flex flex-col gap-4'} method={"POST"}>
-        <input required type={"text"} placeholder="UserName" className={"border p-3 rounded-lg"} name={"username"}/>
-        <input required type={"email"} placeholder="Email" className={"border p-3 rounded-lg"} name={"email"}/>
-        <input required type={"password"} placeholder="Password" className={"border p-3 rounded-lg"} name={"password"}/>
+    <div className='p-3 max-w-xl mx-auto'>
+      <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+        <input
+          type='text'
+          placeholder='Username'
+          className='border p-3 rounded-lg'
+          id='username'
+          onChange={handleChange}
+        />
+        <input
+          type='email'
+          placeholder='Email'
+          className='border p-3 rounded-lg'
+          id='email'
+          onChange={handleChange}
+        />
+
+        <input
+          type='password'
+          placeholder='Password'
+          className='border p-3 rounded-lg'
+          id='password'
+          onChange={handleChange}
+        />
+
         <button className={"bg-slate-700 text-white p-3 rounded-lg uppercase hover:bg-slate-500"}
                 disabled={status === Status.Submitting}>
           {status !== Status.Submitting ? "Sign Up" : <>
@@ -57,15 +100,17 @@ const SignUpPage = () => {
             </svg>
             Loading..</>}
         </button>
-      </Form>
-      <div className={"flex flex-row gap-2 mt-5"}>
-        <p>Have an Account</p>
-        <Link to={"/sign-in"}>
-          <span className={"text-blue-700"}>Sign in</span>
+        <Oauth />
+
+      </form>
+      <div className='flex gap-2 mt-5'>
+        <p>Have an account?</p>
+        <Link to={'/sign-in'}>
+          <span className='text-blue-700'>Sign in</span>
         </Link>
       </div>
+      {error && <p className='text-red-500 mt-5'>{error}</p>}
     </div>
-
   );
 };
 

@@ -1,6 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {Status} from "../../pages/SignUpPage.tsx";
 import {User} from "../../api.ts";
+export enum Status {
+  Idle = "idle",
+  Submitting = "submitting",
+  Loading = "loading"
+}
 
 interface UserState {
   currentUser?: User ,
@@ -9,6 +13,8 @@ interface UserState {
 }
 
 const initialState:UserState = {
+  currentUser:undefined,
+  error:undefined,
   status: Status.Idle
 }
 

@@ -4,13 +4,17 @@ import {MongoError} from "mongodb";
 
 
 export interface SignInUser {
-  username: string,
+  email: string,
   password: string
 }
 
 export interface User extends SignInUser {
-
-  email: string,
-
+  username: string,
+  avatar?:string
 }
 
+export interface GoogleSignInUser{
+  username:string
+  email:string
+  photoURL:string
+}

@@ -1,12 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
-import {Status} from "./SignUpPage.tsx";
 import {SignInData, signInUser,} from "../api.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AxiosError} from "axios";
-import {signInStart, signInFailure, signInSuccess} from "../features/user/userSlice.ts";
+import {signInStart, signInFailure, signInSuccess, Status} from "../features/user/userSlice.ts";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import {RootState} from "../app/store.ts";
+import Oauth from "../components/Oauth.tsx";
 
 // export const action = async ({request}: ActionFunctionArgs) => {
 //   // const signIn = useSignIn()
@@ -30,7 +30,7 @@ import {RootState} from "../app/store.ts";
 
 const SignInPage = () => {
 
-  const [formData, setFormData] = useState<SignInData>({password: "", username: ""});
+  const [formData, setFormData] = useState<SignInData>({password: "", email: ""});
   const {status, error} = useSelector((state: RootState) => state.user)
   const signIn = useSignIn()
   const navigate = useNavigate();
@@ -62,19 +62,19 @@ const SignInPage = () => {
     }
   };
   return (
-    <div className='p-3 max-w-lg mx-auto'>
+    <div className='p-3 max-w-xl mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
-          type='text'
-          placeholder='username'
+          type='email'
+          placeholder='Email'
           className='border p-3 rounded-lg'
-          id='username'
+          id='email'
           onChange={handleChange}
         />
         <input
           type='password'
-          placeholder='password'
+          placeholder='Password'
           className='border p-3 rounded-lg'
           id='password'
           onChange={handleChange}
@@ -94,6 +94,7 @@ const SignInPage = () => {
             </svg>
             Loading..</>}
         </button>
+        <Oauth />
 
       </form>
       <div className='flex gap-2 mt-5'>

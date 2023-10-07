@@ -9,17 +9,20 @@ export interface LoginData {
 }
 
 export interface SignInData {
-  username: string
+  email: string
   password: string;
-
 }
 
-export interface User {
+export interface SignInWithGoogleData{
+  displayName:string
+  email:string
+  photoURL:string
 
+}
+export interface User {
   _id: string,
   username: string,
   email: string
-
 }
 
 interface SignInResponse {
@@ -30,9 +33,7 @@ interface SignInResponse {
 
 export const signupUser = async (credentials: LoginData) => {
   try {
-    const response = await axios.post(`${baseUrl}/user/auth/sign-up`, credentials)
-    console.log(response.status)
-    return response.status
+    return await axios.post(`${baseUrl}/user/auth/sign-up`, credentials) as AxiosResponse<SignInResponse>
   } catch (err) {
     throw err as AxiosError
   }
@@ -46,3 +47,18 @@ export const signInUser = async (credentials: SignInData) => {
     throw err as AxiosError
   }
 }
+export const signInGoogle = async (credentials: SignInWithGoogleData) => {
+  const data= {
+    username : credentials.displayName ,
+    email:credentials.email,
+    photoURL:credentials.photoURL
+
+  }
+  try {
+    return await axios.post(`${baseUrl}/user/auth/google`, data) as AxiosResponse<SignInResponse>
+  } catch (err) {
+    console.log(err)
+    throw err as AxiosError
+  }
+}
+
