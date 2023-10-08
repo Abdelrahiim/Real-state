@@ -13,17 +13,25 @@ export interface SignInData {
   password: string;
 }
 
-export interface SignInWithGoogleData{
-  displayName:string
-  email:string
-  photoURL:string
+export interface SignInWithGoogleData {
+  displayName: string
+  email: string
+  photoURL: string
 
 }
+
 export interface User {
   _id: string,
   username: string,
   email: string,
-  avatar:string
+  avatar: string
+}
+
+export interface UpdateFormData {
+  avatar?: string,
+  username?: string,
+  email?: string,
+  password?: string
 }
 
 interface SignInResponse {
@@ -49,10 +57,10 @@ export const signInUser = async (credentials: SignInData) => {
   }
 }
 export const signInGoogle = async (credentials: SignInWithGoogleData) => {
-  const data= {
-    username : credentials.displayName ,
-    email:credentials.email,
-    photoURL:credentials.photoURL
+  const data = {
+    username: credentials.displayName,
+    email: credentials.email,
+    photoURL: credentials.photoURL
   }
   try {
     return await axios.post(`${baseUrl}/user/auth/google`, data) as AxiosResponse<SignInResponse>
@@ -62,3 +70,23 @@ export const signInGoogle = async (credentials: SignInWithGoogleData) => {
   }
 }
 
+
+export const updateProfile = async (id: string, formData: UpdateFormData) => {
+
+  try {
+    return await axios.put(`${baseUrl}/user/update/${id}`, formData) as AxiosResponse<User>
+  } catch (err) {
+    console.log(err)
+    throw err as AxiosError
+  }
+}
+
+export const deleteProfile = async (id: string) => {
+  try {
+    return await axios.delete(`${baseUrl}/user/delete/${id}`)
+  } catch (err) {
+    console.log(err)
+    throw err as AxiosError
+  }
+
+}

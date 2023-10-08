@@ -5,8 +5,7 @@ import {HTTPException} from "../middlewares/error.middleware.ts";
 import {StatusCodes} from "http-status-codes";
 import {SignJWT} from "jose";
 import {ALGORITHM, EXPIRE, SECRET_KEY} from "../services/Settings.ts";
-import {token} from "morgan";
-import {faker} from "@faker-js/faker";
+import {faker, tr} from "@faker-js/faker";
 import {getUserNameFromDisplayName} from "../services/utils.ts";
 
 
@@ -21,6 +20,7 @@ async function createNewUser(user: User) {
   const {password: pass, ...rest} = newUser._doc
   return [await obtainToken(newUser._id), rest];
 }
+
 interface GenericFilter<T> {
   [key: string]: T;
 }
@@ -49,28 +49,26 @@ async function authenticate(email: string, password: string) {
 }
 
 
-
-async function authenticateWithGoogle(userData:GoogleSignInUser){
+async function authenticateWithGoogle(userData: GoogleSignInUser) {
   try {
-    const user = await findUser({email:userData.email})
+    const user = await findUser({email: userData.email})
 
-    if(user){
+    if (user) {
       // @ts-ignore
       const {password: pass, ...rest} = user._doc
       const token = await obtainToken(user._id)
       return [await obtainToken(user._id), rest]
     }
-    const newUser:User = {
-      username:getUserNameFromDisplayName(userData.username),
-      email:userData.email,
-      password:faker.internet.password(),
-      avatar:userData.photoURL
+    const newUser: User = {
+      username: getUserNameFromDisplayName(userData.username),
+      email: userData.email,
+      password: faker.internet.password(),
+      avatar: userData.photoURL
     }
     return await createNewUser(newUser)
-  } catch (e:any){
-    throw new HTTPException(e.message,StatusCodes.UNAUTHORIZED)
+  } catch (e: any) {
+    throw new HTTPException(e.message, StatusCodes.UNAUTHORIZED)
   }
-
 }
 
 async function obtainToken(userId: Types.ObjectId) {
@@ -79,7 +77,37 @@ async function obtainToken(userId: Types.ObjectId) {
 
 }
 
+async function updateUserInfo(id: string, user: User) {
+  try {
+    if (user.password) {
+      user.password = await Bun.password.hash(user.password)
+    }
+    const updatedUser = await UserModel.findByIdAndUpdate(id, {
+      $set: {
+        username: user.username,
+        password: user.password,
+        email: user.email,
+        avatar: user.avatar
+      }
+    },{new:true})
+    // @ts-ignore
+    const {password,...rest} = updatedUser._doc
 
+    return rest
+  } catch (e: any) {
+    throw new HTTPException(e.message, StatusCodes.NOT_FOUND)
+  }
+}
+
+
+async function deleteUser(id:string){
+  try {
+    const deletedUser = await UserModel.findByIdAndDelete(id)
+  } catch (e:any) {
+    console.log(e)
+    throw new HTTPException(e.message,StatusCodes.NOT_FOUND)
+  }
+}
 
 
 // Just For Development
@@ -94,4 +122,6 @@ export {
   authenticateWithGoogle,
   listAllUsers,
   findUser,
+  updateUserInfo,
+  deleteUser
 }

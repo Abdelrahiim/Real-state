@@ -58,7 +58,7 @@ const SignInPage = () => {
       });
     } catch (err) {
       const e = err as AxiosError<{ error: string }>
-      dispatch(signInFailure(e?.response?.data.error as string));
+      dispatch(signInFailure(e?.response?.data.error || e.message));
     }
   };
   return (
@@ -99,8 +99,8 @@ const SignInPage = () => {
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Have an account?</p>
-        <Link to={'/sign-in'}>
-          <span className='text-blue-700'>Sign in</span>
+        <Link to={'/sign-up'}>
+          <span className='text-blue-700'>Sign Up</span>
         </Link>
       </div>
       {error && <p className='text-red-500 mt-5'>{error}</p>}

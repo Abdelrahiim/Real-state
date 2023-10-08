@@ -56,7 +56,7 @@ const SignUpPage = () => {
       });
     } catch (err) {
       const e = err as AxiosError<{ error: string }>
-      dispatch(signInFailure(e?.response?.data.error as string));
+      dispatch(signInFailure(e?.response?.data.error || e.message ));
     }
   };
   return (

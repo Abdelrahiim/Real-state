@@ -6,8 +6,13 @@ const SignOut = () => {
   const signOut = useSignOut()
   const dispatch = useDispatch()
   const handleSignOut = () => {
-    signOut()
-    dispatch(signingOut())
+    try {
+      signOut()
+      dispatch(signingOut())
+
+    }catch (e){
+      console.log(e)
+    }
 
   }
   return (

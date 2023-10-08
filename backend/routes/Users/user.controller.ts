@@ -4,14 +4,16 @@ import {GoogleSignInUser, SignInUser, User} from "../../Types.ts";
 import {
   authenticate,
   authenticateWithGoogle,
-  createNewUser,
+  createNewUser, deleteUser,
   findUser,
-  listAllUsers,
+  listAllUsers, updateUserInfo,
 
 } from "../../models/user.model.ts";
 import {BadRequest} from "http-errors";
 import {faker} from "@faker-js/faker";
 import {HTTPException} from "../../middlewares/error.middleware.ts";
+import {CustomRequest} from "../../middlewares/verifyToken.middleware.ts";
+import chalk from "chalk";
 
 /**
  * Sign Up Controller Function that Create The new User
@@ -63,6 +65,29 @@ async function signInWithGoogle(req: Request<{}, {}, GoogleSignInUser>, res: Res
 }
 
 
+async function update(req:Request<{id:string},{},User>,res:Response){
+  // @ts-ignore
+  if(req.userId !== req.params.id){
+    return res.status(StatusCodes.UNAUTHORIZED).json({error:"You Can Only Update You Account"})
+  }
+  try {
+    return  res.status(StatusCodes.ACCEPTED).json(await updateUserInfo(req.params.id,req.body))
+  } catch (e:any){
+    return res.status(e.statusCode).json({error: e.message})
+  }
+}
+async function destroy(req:Request<{id:string}>,res:Response){
+  // @ts-ignore
+  if(req.userId !== req.params.id){
+    return res.status(StatusCodes.UNAUTHORIZED).json({error:"You Can Only Update You Account"})
+  }
+  try {
+    await deleteUser(req.params.id)
+    return res.sendStatus(StatusCodes.OK)
+  } catch (e:any) {
+    return res.status(e.statusCode).json({error: e.message})
+  }
+}
 // Just For Development
 async function list(req: Request, res: Response) {
   return res.status(StatusCodes.OK).json(await listAllUsers())
@@ -73,5 +98,7 @@ export default {
   signUp,
   signIn,
   list,
+  update,
+  destroy,
   signInWithGoogle
 }

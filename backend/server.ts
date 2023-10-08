@@ -4,7 +4,8 @@ import {connectMongo} from "./services/mongo.ts";
 import UserRouter from "./routes/Users/user.router.ts";
 import helmet from "helmet";
 import cors from "./middlewares/cors.middleware.ts";
-import {errorHandler} from "./middlewares/error.middleware.ts";
+
+import cookieParser from "cookie-parser"
 
 
 const PORT = process.env.PORT || 8000
@@ -15,6 +16,7 @@ const app = express()
 app.use(helmet())
 app.use(cors());
 app.use(express.json())
+app.use(cookieParser())
 app.use(morgan("combined"))
 
 
