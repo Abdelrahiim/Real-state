@@ -4,48 +4,44 @@ import Layout from "./components/Layout.tsx";
 import {AboutPage, HomePage, ProfilePage, SignInPage, SignUpPage} from "./pages";
 import AuthProvider from "react-auth-kit/AuthProvider";
 import RequireAuth from "react-auth-kit/PrivateRoute";
+import CreateListing from "./pages/CreateListing.tsx";
 
 
 // @ts-ignore
-// @ts-ignore
-// @ts-ignore
-// @ts-ignore
-// @ts-ignore
-
-const AboutPageProtected = <RequireAuth loginPath={"/sign-in"}> <AboutPage/> </RequireAuth>
-// @ts-ignore
-const ProfilePageProtected = <RequireAuth loginPath={"/sign-in"}><ProfilePage/> </RequireAuth>
-
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout/>,
+    // @ts-ignore
+    element: <RequireAuth loginPath={"/sign-in"}><Layout/> </RequireAuth>,
     children: [
       {
-        index: true,
-        element: <RequireAuth loginPath={"/sign-in"}><HomePage/></RequireAuth>
+        index:true,
+        element: <HomePage/>,
       },
       {
         path: "about",
-        element: AboutPageProtected
+        element: <AboutPage />
       },
       {
         path: "profile",
-        element: ProfilePageProtected
+        element: <ProfilePage/>
       },
       {
-        path: "sign-in",
-        element: <SignInPage/>,
-      },
-      {
-        path: "sign-up",
-        element: <SignUpPage/>,
+        path: "create-listing",
+        element: <CreateListing />
 
-      }
+      },
     ]
+  },
+  {
+    path: "sign-in",
+    element: <SignInPage/>,
+  },
+  {
+    path: "sign-up",
+    element: <SignUpPage/>,
   }
 ])
-
 
 
 function App() {

@@ -1,6 +1,6 @@
 import {Schema, model} from "mongoose";
 import {User} from "../Types.ts";
-import {faker} from "@faker-js/faker";
+
 
 const userSchema = new Schema<User>({
   username: {

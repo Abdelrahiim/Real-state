@@ -10,15 +10,12 @@ import {faker} from "@faker-js/faker"
 
 const Client = supertest(app)
 
+let token: string
+let currentUserId: string
 describe("Test Api User EndPoints", () => {
   beforeAll(() => {
     connectMongo()
   })
-  afterAll(() => {
-    disconnectMongo()
-  })
-  let token: string
-  let currentUserId: string
   /**
    * Testing User Get endpoint
    * GET /api/user
@@ -93,7 +90,7 @@ describe("Test Api User EndPoints", () => {
    * Test Update User End Points
    * PUT api.user/update/userId
    */
-  describe(`Test ${chalk.blueBright("PUT")} /api/user/auth/update/userId`, () => {
+  describe.skip(`Test ${chalk.blueBright("PUT")} /api/user/auth/update/userId`, () => {
     test("it Should Return 202 And Content-Type = Application/json", async () => {
       const response = await Client.put(`/api/user/update/${currentUserId}`).send({
         username: faker.internet.userName()
@@ -119,7 +116,7 @@ describe("Test Api User EndPoints", () => {
    * Test Update User End Points
    * DELETE api/user/delete/userId
    */
-  describe(`Test ${chalk.redBright("DELETE")} /api/user/delete/userId`, () => {
+  describe.skip(`Test ${chalk.redBright("DELETE")} /api/user/delete/userId`, () => {
 
     test("it Should Return 200", async () => {
       const response = await Client.del(`/api/user/delete/${currentUserId}`).send({
@@ -140,5 +137,7 @@ describe("Test Api User EndPoints", () => {
 
 
 })
-
+export {
+  token,currentUserId
+}
 

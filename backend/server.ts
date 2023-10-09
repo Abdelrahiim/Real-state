@@ -6,6 +6,7 @@ import helmet from "helmet";
 import cors from "./middlewares/cors.middleware.ts";
 
 import cookieParser from "cookie-parser"
+import ListingRouter from "./routes/listing/listing.router.ts";
 
 
 const PORT = process.env.PORT || 8000
@@ -21,6 +22,7 @@ app.use(morgan("combined"))
 
 
 app.use("/api/user", UserRouter)
+app.use("/api/listing",ListingRouter)
 
 
 await connectMongo()

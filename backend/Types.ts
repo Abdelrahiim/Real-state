@@ -1,6 +1,5 @@
-import {clearScreenDown} from "readline";
-import {StatusCodes} from "http-status-codes";
-import {MongoError} from "mongodb";
+
+import { Types} from "mongoose";
 
 
 export interface SignInUser {
@@ -19,3 +18,18 @@ export interface GoogleSignInUser{
   photoURL:string
 }
 
+export interface Listing{
+  name:string
+  address:string
+  description:string
+  regularPrice:number
+  discountPrice:number
+  bathrooms:number
+  bedrooms:number
+  furnished:boolean
+  parking:boolean
+  type:string
+  offer:boolean
+  imageURL:Types.Array<string>
+  userRef:string | Types.ObjectId
+}
