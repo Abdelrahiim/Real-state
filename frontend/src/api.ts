@@ -38,6 +38,20 @@ interface SignInResponse {
   token: string,
   user: User
 }
+export interface Listing{
+  name:string
+  address:string
+  description:string
+  regularPrice:number
+  discountPrice:number
+  bathrooms:number
+  bedrooms:number
+  furnished:boolean
+  parking:boolean
+  type:string
+  offer:boolean
+  imageURL:string[]
+}
 
 
 export const signupUser = async (credentials: LoginData) => {
