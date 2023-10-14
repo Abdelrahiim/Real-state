@@ -1,10 +1,8 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
-
 import Layout from "./components/Layout.tsx";
-import {AboutPage, HomePage, ProfilePage, SignInPage, SignUpPage} from "./pages";
+import {AboutPage, HomePage, ProfilePage, SignInPage, SignUpPage, CreateListing, ListingDetail} from "./pages";
 import AuthProvider from "react-auth-kit/AuthProvider";
 import RequireAuth from "react-auth-kit/PrivateRoute";
-import CreateListing from "./pages/CreateListing.tsx";
 
 
 // @ts-ignore
@@ -15,21 +13,29 @@ const router = createBrowserRouter([
     element: <RequireAuth loginPath={"/sign-in"}><Layout/> </RequireAuth>,
     children: [
       {
-        index:true,
+        index: true,
         element: <HomePage/>,
       },
       {
         path: "about",
-        element: <AboutPage />
+        element: <AboutPage/>
       },
       {
         path: "profile",
         element: <ProfilePage/>
       },
       {
-        path: "create-listing",
-        element: <CreateListing />
-
+        path: "listing",
+        children: [
+          {
+            index: true,
+            element: <CreateListing/>,
+          },
+          {
+            path: ":id",
+            element: <ListingDetail/>
+          }
+        ]
       },
     ]
   },

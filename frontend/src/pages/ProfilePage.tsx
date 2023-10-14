@@ -110,7 +110,7 @@ const ProfilePage = () => {
           <Spinner />
           Loading..</>}
       </button>
-      <Link to={"/create-listing"}
+      <Link to={"/listing"}
             className={"bg-green-700 text-white p-3 text-center rounded-lg uppercase hover:bg-green-500"}> Create Listing </Link>
     </form>
 

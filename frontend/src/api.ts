@@ -84,7 +84,6 @@ export const signInGoogle = async (credentials: SignInWithGoogleData) => {
   }
 }
 
-
 export const updateProfile = async (id: string, formData: UpdateFormData) => {
 
   try {
@@ -102,5 +101,17 @@ export const deleteProfile = async (id: string) => {
     console.log(err)
     throw err as AxiosError
   }
-
 }
+
+
+
+export const createListingApi = async (listing:Listing) => {
+  try {
+    return await axios.post(`${baseUrl}/listing`,listing )
+  }
+  catch (err) {
+    console.log(err)
+    throw err as AxiosError
+  }
+}
+
