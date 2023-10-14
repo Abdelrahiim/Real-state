@@ -1,13 +1,14 @@
 import {token, currentUserId} from "../Users/user.test.ts";
 import supertest from "supertest";
 import app from "../../server.ts";
-import {describe, beforeAll, afterAll, test, expect} from "bun:test";
-import {connectMongo, disconnectMongo} from "../../services/mongo.ts";
+import {describe, afterAll, test, expect} from "bun:test";
+import {disconnectMongo} from "../../services/mongo.ts";
 import chalk from "chalk";
 import {StatusCodes} from "http-status-codes";
 
 import {faker} from "@faker-js/faker"
 
+let listingId: string
 const Client = supertest(app)
 describe("Testing List EndPoints", () => {
   afterAll(() => {
@@ -39,6 +40,7 @@ describe("Testing List EndPoints", () => {
       ).set("Cookie", [`_auth=${token}`])
         .expect(StatusCodes.OK)
         .expect('Content-Type', /application\/json/)
+      listingId = response.body._id
     })
   })
 
@@ -47,13 +49,44 @@ describe("Testing List EndPoints", () => {
    * Test Get Listing EndPoints
    * GET /api/listing
    */
-  describe(`Test ${chalk.greenBright("GET")} /api/listing/`, async () => {
+  describe(`Test ${chalk.greenBright("GET")} /api/listing/`, () => {
     test("It Should Return Response 201 And Content-Type = Application/json", async () => {
       const response = await Client.get("/api/listing")
         .set("Cookie", [`_auth=${token}`])
         .expect(StatusCodes.OK)
         .expect('Content-Type', /application\/json/)
-      console.log(response.body)
+    })
+    test("It Should Return Response 401 And Content-Type = Application/json", async () => {
+      const response = await Client.get("/api/listing")
+        .expect(StatusCodes.UNAUTHORIZED)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.error).toBe("UnAuthorized")
+    })
+
+  })
+
+  /**
+   * Test DELETE Listing EngPoints
+   * DELETE /api/listing/id
+   */
+  describe(`Test ${chalk.redBright("DELETE")} api/listing/:id`, () => {
+    test("It Should Return Response 200", async () => {
+      const response = await Client.del(`/api/listing/${listingId}`)
+        .set("Cookie", [`_auth=${token}`])
+        .expect(StatusCodes.OK)
+    })
+    test("It Should Return Response 401 And Content-Type = Application/json", async () => {
+      const response = await Client.del(`/api/listing/${listingId}`)
+        .expect(StatusCodes.UNAUTHORIZED)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.error).toBe("UnAuthorized")
+    })
+
+    test("It Should Return 404 NOT FOUND ", async () => {
+      const response = await Client.del(`/api/listing/324`)
+        .set("Cookie", [`_auth=${token}`]).expect(StatusCodes.NOT_FOUND)
     })
   })
+
+
 })

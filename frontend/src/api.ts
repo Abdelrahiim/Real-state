@@ -127,3 +127,11 @@ export const getListing = async () => {
     throw err as AxiosError
   }
 }
+
+export const deleteListing = async (id:string) => {
+    try {
+      return await axios.delete(`${baseUrl}/listing/${id}`) as AxiosResponse<ListingResponse[]>
+    } catch (err){
+      throw err as AxiosError
+    }
+}

@@ -5,7 +5,7 @@ import SignOut from "../components/SignOut.tsx";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
-import {getListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
+import {deleteListing, getListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
 import {updateStart, updateFailure, updateSuccess, Status} from "../features/user/userSlice.ts";
 import {AxiosError} from "axios";
 import DeleteUser from "../components/DeleteUser.tsx";
@@ -81,6 +81,17 @@ const ProfilePage = () => {
       setShowListingError(e?.response?.data.error || e.message)
     }
   }
+
+  const handleListingDelete = async (id: string) => {
+    try {
+      // @ts-ignore
+      const  _response = await deleteListing(id)
+      setUserListings((prev) => prev.filter((listing) => listing._id !== id))
+    } catch (err) {
+      console.log(err)
+
+    }
+  }
   return <div className={"p-3 max-w-xl mx-auto"}>
     <h1 className={"text-3xl font-semibold text-center my-7"}>
       Profile Page
@@ -138,7 +149,7 @@ const ProfilePage = () => {
     {showListingError && <p className={"text-red-700 mt-5"}>{showListingError}</p>}
     {userListings && userListings.length > 0 &&
         <div className={"flex flex-col gap-4"}>
-          <h1 className={"text-center mt-7 text-2xl font-semibold"}>You Listings</h1>
+            <h1 className={"text-center mt-7 text-2xl font-semibold"}>You Listings</h1>
           {userListings.map((userListing) => (
             <div key={userListing._id} className={"flex my-4 justify-between p-3 items-center border rounded-lg gap-4"}>
               <Link to={`/listing/${userListing._id}`}>
@@ -149,7 +160,9 @@ const ProfilePage = () => {
                 <p>{userListing.name}</p>
               </Link>
               <div className={"flex flex-col items-center"}>
-                <button className={"text-red-700 uppercase"}>Delete</button>
+                <button onClick={() => handleListingDelete(userListing._id)}
+                        className={"text-red-700 uppercase"}>Delete
+                </button>
                 <button className={"text-green-700 uppercase"}>Edit</button>
               </div>
             </div>

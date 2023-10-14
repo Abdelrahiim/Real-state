@@ -117,7 +117,6 @@ describe("Test Api User EndPoints", () => {
    * DELETE api/user/delete/userId
    */
   describe.skip(`Test ${chalk.redBright("DELETE")} /api/user/delete/userId`, () => {
-
     test("it Should Return 200", async () => {
       const response = await Client.del(`/api/user/delete/${currentUserId}`).send({
         username: faker.internet.userName()
