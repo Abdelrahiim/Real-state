@@ -19,7 +19,6 @@ describe("Testing List EndPoints", () => {
    * POST /api/listing
    */
   describe(`Test ${chalk.yellowBright("POST")} /api/listing/`, () => {
-
     const listing = {
       address: faker.location.streetAddress(),
       bathrooms: faker.number.int({min: 1, max: 5}),
@@ -40,6 +39,21 @@ describe("Testing List EndPoints", () => {
       ).set("Cookie", [`_auth=${token}`])
         .expect(StatusCodes.OK)
         .expect('Content-Type', /application\/json/)
+    })
+  })
+
+  /**
+   * It Returns Only Listing That The Register User Created
+   * Test Get Listing EndPoints
+   * GET /api/listing
+   */
+  describe(`Test ${chalk.greenBright("GET")} /api/listing/`, async () => {
+    test("It Should Return Response 201 And Content-Type = Application/json", async () => {
+      const response = await Client.get("/api/listing")
+        .set("Cookie", [`_auth=${token}`])
+        .expect(StatusCodes.OK)
+        .expect('Content-Type', /application\/json/)
+      console.log(response.body)
     })
   })
 })

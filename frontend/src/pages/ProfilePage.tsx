@@ -5,7 +5,7 @@ import SignOut from "../components/SignOut.tsx";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
-import {UpdateFormData, updateProfile} from "../api.ts";
+import {getListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
 import {updateStart, updateFailure, updateSuccess, Status} from "../features/user/userSlice.ts";
 import {AxiosError} from "axios";
 import DeleteUser from "../components/DeleteUser.tsx";
@@ -22,14 +22,15 @@ const ProfilePage = () => {
   const dispatch = useDispatch()
   const [update, setUpdate] = useState(false)
   const [formData, setFormData] = useState<UpdateFormData>({});
-
+  const [showListingError, setShowListingError] = useState<null | string>(null)
+  const [userListings, setUserListings] = useState<ListingResponse[]>([])
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
-  console.log(formData)
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
@@ -68,6 +69,18 @@ const ProfilePage = () => {
     }
   }, [file])
 
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(null)
+      const response = await getListing();
+      console.log(response.data)
+      setUserListings(response.data)
+
+    } catch (err) {
+      const e = err as AxiosError<{ error: string }>
+      setShowListingError(e?.response?.data.error || e.message)
+    }
+  }
   return <div className={"p-3 max-w-xl mx-auto"}>
     <h1 className={"text-3xl font-semibold text-center my-7"}>
       Profile Page
@@ -107,11 +120,12 @@ const ProfilePage = () => {
       <button className={"bg-slate-700 text-white p-3 rounded-lg uppercase hover:bg-slate-500"}
               disabled={status === Status.Submitting}>
         {status !== Status.Submitting ? "Update" : <>
-          <Spinner />
+          <Spinner/>
           Loading..</>}
       </button>
       <Link to={"/listing"}
-            className={"bg-green-700 text-white p-3 text-center rounded-lg uppercase hover:bg-green-500"}> Create Listing </Link>
+            className={"bg-green-700 text-white p-3 text-center rounded-lg uppercase hover:bg-green-500"}> Create
+        Listing </Link>
     </form>
 
     <div className={"flex justify-between mt-5"}>
@@ -120,6 +134,30 @@ const ProfilePage = () => {
     </div>
     {error && <p className={"text-red-700"}>{error}</p>}
     {update && <p className={"text-green-700"}>User Update Successfully</p>}
+    <button onClick={handleShowListings} className={"text-green-700 w-full"}>Show Listings</button>
+    {showListingError && <p className={"text-red-700 mt-5"}>{showListingError}</p>}
+    {userListings && userListings.length > 0 &&
+        <div className={"flex flex-col gap-4"}>
+          <h1 className={"text-center mt-7 text-2xl font-semibold"}>You Listings</h1>
+          {userListings.map((userListing) => (
+            <div key={userListing._id} className={"flex my-4 justify-between p-3 items-center border rounded-lg gap-4"}>
+              <Link to={`/listing/${userListing._id}`}>
+                <img src={userListing.imageURL[0]} alt={"listing image"} className={"h-16 w-16 object-contain "}/>
+              </Link>
+              <Link className={"text-stale-700 font-semibold flex-1 hover:underline truncate"}
+                    to={`/listing/${userListing._id}`}>
+                <p>{userListing.name}</p>
+              </Link>
+              <div className={"flex flex-col items-center"}>
+                <button className={"text-red-700 uppercase"}>Delete</button>
+                <button className={"text-green-700 uppercase"}>Edit</button>
+              </div>
+            </div>
+          ))
+          }
+        </div>
+
+    }
   </div>;
 };
 

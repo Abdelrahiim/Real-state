@@ -1,11 +1,10 @@
 import {Request, Response} from "express";
 import {StatusCodes} from "http-status-codes";
-import {createNewListing} from "../../models/listing.model.ts";
+import {createNewListing, getUserListing} from "../../models/listing.model.ts";
 import {Listing} from "../../Types.ts";
 import {HTTPException} from "../../middlewares/error.middleware.ts";
 
 async function create(req: Request<{}, {}, Listing>, res: Response) {
-
   try {
     // @ts-ignore
     const newListing = await createNewListing({userRef:req.userId,...req.body})
@@ -13,11 +12,19 @@ async function create(req: Request<{}, {}, Listing>, res: Response) {
   } catch (e: any) {
     return res.status(e.statusCode).json({error: e.message})
   }
+}
 
+async function list(req: Request, res: Response){
+  try {
+    // @ts-ignore
+    const userListings = await getUserListing(req.userId)
+    return res.status(StatusCodes.OK).json(userListings)
+  } catch (e:any){
+    return res.status(e.statusCode).json({error: e.message})
+  }
 }
 
 
-
 export default {
-  create
+  create,list
 }

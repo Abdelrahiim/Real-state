@@ -53,6 +53,10 @@ export interface Listing{
   imageURL:string[]
 }
 
+export interface ListingResponse extends Listing {
+  _id:string
+}
+
 
 export const signupUser = async (credentials: LoginData) => {
   try {
@@ -115,3 +119,11 @@ export const createListingApi = async (listing:Listing) => {
   }
 }
 
+
+export const getListing = async () => {
+  try {
+    return await axios.get(`${baseUrl}/listing`) as AxiosResponse<ListingResponse[]>
+  } catch (err){
+    throw err as AxiosError
+  }
+}
