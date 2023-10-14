@@ -14,7 +14,7 @@ const DeleteUser = () => {
   const signOut = useSignOut()
   const [openModal, setOpenModal] = useState<string | undefined>();
   const props = {openModal, setOpenModal};
-  console.log(error)
+
   const handleAccountDelete = async () => {
     try {
       dispatch(deleteStart())

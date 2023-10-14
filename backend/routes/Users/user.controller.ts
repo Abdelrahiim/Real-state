@@ -34,7 +34,6 @@ async function signUp(req: Request<{}, {}, User>, res: Response) {
       success: false,
       message: e.message
     })
-
   }
 }
 

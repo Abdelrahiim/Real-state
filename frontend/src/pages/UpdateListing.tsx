@@ -1,15 +1,14 @@
 import {FileInput} from "flowbite-react";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {Status} from "../features/user/userSlice.ts";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
+import { Listing, retrieveListing, updateListing} from "../api.ts";
+import {useNavigate, useParams} from "react-router-dom";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
-import {createListingApi, Listing} from "../api.ts";
 import {AxiosError} from "axios";
-import {Status} from "../features/user/userSlice.ts";
-import {useNavigate } from "react-router-dom";
 
-
-const CreateListing = () => {
+const UpdateListing = () => {
   const [images, setImages] = useState<File []>([])
 
   const [formData, setFormData] = useState<Listing>({
@@ -32,7 +31,19 @@ const CreateListing = () => {
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<Status>(Status.Idle)
   const navigate = useNavigate()
+  const {listingId} = useParams<{listingId:string}>()
 
+  useEffect(() => {
+    const fetchListing = async () =>{
+      try {
+        const response = await retrieveListing(listingId as string)
+        setFormData(response.data)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    fetchListing()
+  },[])
   const handleImageSubmit = async () => {
     if (images?.length > 0 && images?.length + formData.imageURL.length < 7) {
       setUploading(true)
@@ -55,7 +66,6 @@ const CreateListing = () => {
       setUploading(false)
     }
   }
-
 
   const handleRemoveImage = (index: number) => {
     setFormData({
@@ -130,10 +140,10 @@ const CreateListing = () => {
       }
       setStatus(Status.Submitting)
       setError(null)
-      // @ts-ignore
-      const response = await createListingApi(formData)
+
+      const response = await updateListing(formData,listingId as string)
       setStatus(Status.Idle)
-      navigate(`${response.data._id}`, {
+      navigate(`/listing/${response?.data._id}`, {
         replace: true,
       });
 
@@ -146,7 +156,8 @@ const CreateListing = () => {
   }
   return (
     <div className={"p-3 max-w-4xl mx-auto"}>
-      <h1 className={"text-3xl font-semibold text-center my-7"}>Create A Listing</h1>
+      <h1 className={"text-3xl font-semibold text-center my-7"}>Update Listing</h1>
+
       <form onSubmit={handleSubmit} className={"flex flex-col gap-4 sm:flex-row"}>
         <div className={"flex flex-col flex-1  full gap-4"}>
           <input value={formData.name} onChange={handleChange} id={"name"} type={"text"} placeholder={"name"}
@@ -266,7 +277,7 @@ const CreateListing = () => {
           <button
             className={"p-3 mt-8 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"}
             disabled={status === Status.Submitting || uploading}>
-            {status !== Status.Submitting ? "Create Listing" : <>
+            {status !== Status.Submitting ? "Update Listing" : <>
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin"
                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -282,7 +293,8 @@ const CreateListing = () => {
         </div>
       </form>
     </div>
-  );
+  )
+
 };
 
-export default CreateListing
+export default UpdateListing

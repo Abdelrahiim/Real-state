@@ -1,6 +1,12 @@
 import {Request, Response} from "express";
 import {StatusCodes} from "http-status-codes";
-import {createNewListing, deleteListing, getUserListing} from "../../models/listing.model.ts";
+import {
+  createNewListing,
+  deleteListing,
+  findListing,
+  getUserListing,
+  updateListing
+} from "../../models/listing.model.ts";
 import {Listing} from "../../Types.ts";
 import {HTTPException} from "../../middlewares/error.middleware.ts";
 
@@ -24,6 +30,25 @@ async function list(req: Request, res: Response) {
   }
 }
 
+async function retrieve(req: Request<{ id: string }>, res: Response) {
+  try {
+    const listing = await findListing(req.params.id)
+    return res.status(StatusCodes.OK).json(listing)
+  } catch (e: any) {
+    return res.status(e.statusCode).json({error: e.message})
+  }
+}
+
+async function update(req: Request<{ id: string }, {}, Listing>, res: Response) {
+  try {
+    // @ts-ignore
+    const updatedListing = await updateListing(req.params.id, req.userId, req.body)
+    return res.status(StatusCodes.ACCEPTED).json(updatedListing)
+  } catch (e: any) {
+    return res.status(e.statusCode).json({error: e.message})
+  }
+}
+
 async function destroy(req: Request<{ id: string }>, res: Response) {
   try {
     // @ts-ignore
@@ -36,5 +61,5 @@ async function destroy(req: Request<{ id: string }>, res: Response) {
 
 
 export default {
-  create, list , destroy
+  create, list, destroy, update, retrieve
 }

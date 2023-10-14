@@ -14,7 +14,6 @@ async function createNewListing(listing: Listing) {
 async function getUserListing(userId: string) {
   try {
     return await ListingModel.find({userRef: userId})
-
   } catch (e: any) {
     throw new HTTPException(e.message, StatusCodes.NOT_FOUND)
   }
@@ -28,6 +27,17 @@ async function findListing(id: string) {
   }
 }
 
+async function updateListing(id:string,userId:string,data:Listing){
+  try {
+    const listing = await findListing(id)
+    if (listing?.userRef.toString() !== userId) {
+      throw new HTTPException("You Can only delete Your own listings", StatusCodes.BAD_REQUEST)
+    }
+    return await ListingModel.findByIdAndUpdate(listing._id,data,{new:true})
+  } catch (e:any){
+    throw new HTTPException(e.message, e.statusCode || StatusCodes.NOT_FOUND)
+  }
+}
 async function deleteListing(id: string, userId: string) {
   try {
     const listing = await findListing(id)
@@ -36,7 +46,7 @@ async function deleteListing(id: string, userId: string) {
     }
     await ListingModel.findByIdAndDelete(id)
   } catch (e: any) {
-    throw new HTTPException(e.message, StatusCodes.NOT_FOUND)
+    throw new HTTPException(e.message, e.statusCode || StatusCodes.NOT_FOUND)
   }
 
 }
@@ -44,5 +54,7 @@ async function deleteListing(id: string, userId: string) {
 export {
   createNewListing,
   getUserListing,
-  deleteListing
+  deleteListing,
+  updateListing,
+  findListing
 }

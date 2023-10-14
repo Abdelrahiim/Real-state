@@ -1,6 +1,15 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import Layout from "./components/Layout.tsx";
-import {AboutPage, HomePage, ProfilePage, SignInPage, SignUpPage, CreateListing, ListingDetail} from "./pages";
+import {
+  AboutPage,
+  HomePage,
+  ProfilePage,
+  SignInPage,
+  SignUpPage,
+  CreateListing,
+  ListingDetail,
+  UpdateListing
+} from "./pages";
 import AuthProvider from "react-auth-kit/AuthProvider";
 import RequireAuth from "react-auth-kit/PrivateRoute";
 
@@ -34,9 +43,14 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <ListingDetail/>
+          },
+          {
+            path:":listingId/edit",
+            element:<UpdateListing />
           }
         ]
       },
+
     ]
   },
   {

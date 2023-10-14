@@ -5,10 +5,10 @@ import {describe, afterAll, test, expect} from "bun:test";
 import {disconnectMongo} from "../../services/mongo.ts";
 import chalk from "chalk";
 import {StatusCodes} from "http-status-codes";
-
 import {faker} from "@faker-js/faker"
 
 let listingId: string
+
 const Client = supertest(app)
 describe("Testing List EndPoints", () => {
   afterAll(() => {
@@ -20,6 +20,9 @@ describe("Testing List EndPoints", () => {
    * POST /api/listing
    */
   describe(`Test ${chalk.yellowBright("POST")} /api/listing/`, () => {
+    const types = [
+      "rent",'sale'
+    ]
     const listing = {
       address: faker.location.streetAddress(),
       bathrooms: faker.number.int({min: 1, max: 5}),
@@ -31,7 +34,7 @@ describe("Testing List EndPoints", () => {
       offer: true,
       parking: true,
       regularPrice: Number(faker.commerce.price()),
-      type: faker.commerce.department(),
+      type: types[faker.number.int({min:0,max:1})],
       name: faker.commerce.productName()
     }
     test("It Should Return Response 201 And Content-Type = Application/json ", async () => {
@@ -50,20 +53,71 @@ describe("Testing List EndPoints", () => {
    * GET /api/listing
    */
   describe(`Test ${chalk.greenBright("GET")} /api/listing/`, () => {
-    test("It Should Return Response 201 And Content-Type = Application/json", async () => {
-      const response = await Client.get("/api/listing")
+    describe("Get ALl Listing From The Data Base", () => {
+      test("It Should Return Response 201 And Content-Type = Application/json", async () => {
+        const response = await Client.get("/api/listing")
+          .set("Cookie", [`_auth=${token}`])
+          .expect(StatusCodes.OK)
+          .expect('Content-Type', /application\/json/)
+      })
+      test("It Should Return Response 401 And Content-Type = Application/json", async () => {
+        const response = await Client.get("/api/listing")
+          .expect(StatusCodes.UNAUTHORIZED)
+          .expect('Content-Type', /application\/json/)
+        expect(response.body.error).toBe("UnAuthorized")
+      })
+    })
+
+    describe("GET Single Listing", () => {
+      test("it Should Return 200 And Content Type == Application/json", async () => {
+        const response = await Client.get(`/api/listing/${listingId}`)
+          .set("Cookie", [`_auth=${token}`])
+          .expect(StatusCodes.OK)
+          .expect('Content-Type', /application\/json/)
+      })
+      test("it Should Return 404 NOT Found", async () => {
+        const response = await Client.get(`/api/listing/dljkasjkdljlk`)
+          .set("Cookie", [`_auth=${token}`])
+          .expect(StatusCodes.NOT_FOUND)
+        expect(response.body.error).toBe("Not Found")
+      })
+    })
+
+  })
+
+  /**
+   * Test PUT Listing EngPoints
+   * PUT /api/listing/id
+   */
+  describe(`Test ${chalk.blueBright("PUT")} /api/listing/:id`, () => {
+
+    test("it Should Return Response 202 And Content-Type = Application/json", async () => {
+      const response = await Client.put(`/api/listing/${listingId}`)
+        .send({
+          address: faker.location.secondaryAddress(),
+          name: faker.commerce.productName()
+        })
         .set("Cookie", [`_auth=${token}`])
-        .expect(StatusCodes.OK)
+        .expect(StatusCodes.ACCEPTED)
         .expect('Content-Type', /application\/json/)
     })
+
     test("It Should Return Response 401 And Content-Type = Application/json", async () => {
-      const response = await Client.get("/api/listing")
+      const response = await Client.put(`/api/listing/${listingId}`)
+        .send({
+          address: faker.location.secondaryAddress(),
+          name: faker.commerce.productName()
+        })
         .expect(StatusCodes.UNAUTHORIZED)
         .expect('Content-Type', /application\/json/)
       expect(response.body.error).toBe("UnAuthorized")
     })
-
+    test("It Should Return 404 NOT FOUND ", async () => {
+      const response = await Client.put(`/api/listing/324`)
+        .set("Cookie", [`_auth=${token}`]).expect(StatusCodes.NOT_FOUND)
+    })
   })
+
 
   /**
    * Test DELETE Listing EngPoints
@@ -81,12 +135,9 @@ describe("Testing List EndPoints", () => {
         .expect('Content-Type', /application\/json/)
       expect(response.body.error).toBe("UnAuthorized")
     })
-
     test("It Should Return 404 NOT FOUND ", async () => {
       const response = await Client.del(`/api/listing/324`)
         .set("Cookie", [`_auth=${token}`]).expect(StatusCodes.NOT_FOUND)
     })
   })
-
-
 })

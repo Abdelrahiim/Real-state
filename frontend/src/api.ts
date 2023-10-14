@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 
-const baseUrl = "api"
+
+const baseUrl = "/api"
 
 export interface LoginData {
   username: string
@@ -38,23 +39,24 @@ interface SignInResponse {
   token: string,
   user: User
 }
-export interface Listing{
-  name:string
-  address:string
-  description:string
-  regularPrice:number
-  discountPrice:number
-  bathrooms:number
-  bedrooms:number
-  furnished:boolean
-  parking:boolean
-  type:string
-  offer:boolean
-  imageURL:string[]
+
+export interface Listing {
+  name: string
+  address: string
+  description: string
+  regularPrice: number
+  discountPrice: number
+  bathrooms: number
+  bedrooms: number
+  furnished: boolean
+  parking: boolean
+  type: string
+  offer: boolean
+  imageURL: string[]
 }
 
 export interface ListingResponse extends Listing {
-  _id:string
+  _id: string
 }
 
 
@@ -108,30 +110,46 @@ export const deleteProfile = async (id: string) => {
 }
 
 
-
-export const createListingApi = async (listing:Listing) => {
+export const createListingApi = async (listing: Listing) => {
   try {
-    return await axios.post(`${baseUrl}/listing`,listing )
-  }
-  catch (err) {
+    return await axios.post(`${baseUrl}/listing`, listing)
+  } catch (err) {
     console.log(err)
     throw err as AxiosError
   }
 }
 
 
+
 export const getListing = async () => {
   try {
     return await axios.get(`${baseUrl}/listing`) as AxiosResponse<ListingResponse[]>
-  } catch (err){
+  } catch (err) {
     throw err as AxiosError
   }
 }
 
-export const deleteListing = async (id:string) => {
-    try {
-      return await axios.delete(`${baseUrl}/listing/${id}`) as AxiosResponse<ListingResponse[]>
-    } catch (err){
-      throw err as AxiosError
-    }
+export const retrieveListing = async (id: string ) => {
+  try {
+    return await axios.get(`${baseUrl}/listing/${id}/`)
+  } catch (err) {
+    console.log(err)
+    throw err as AxiosError
+  }
+}
+
+
+export const updateListing =  async (listing:Listing,id:string)=>{
+  try {
+    return await axios.put(`${baseUrl}/listing/${id}/`,listing) as AxiosResponse<ListingResponse>
+  } catch (e) {
+
+  }
+}
+export const deleteListing = async (id: string) => {
+  try {
+    return await axios.delete(`${baseUrl}/listing/${id}`)
+  } catch (err) {
+    throw err as AxiosError
+  }
 }

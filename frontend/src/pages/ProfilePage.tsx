@@ -73,7 +73,6 @@ const ProfilePage = () => {
     try {
       setShowListingError(null)
       const response = await getListing();
-      console.log(response.data)
       setUserListings(response.data)
 
     } catch (err) {
@@ -163,7 +162,7 @@ const ProfilePage = () => {
                 <button onClick={() => handleListingDelete(userListing._id)}
                         className={"text-red-700 uppercase"}>Delete
                 </button>
-                <button className={"text-green-700 uppercase"}>Edit</button>
+                <Link to={`/listing/${userListing._id}/edit`} className={"text-green-700 uppercase"}>Edit</Link>
               </div>
             </div>
           ))
