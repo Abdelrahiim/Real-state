@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 
 
-const baseUrl = "/api"
+export const baseUrl = "/api"
 
 export interface LoginData {
   username: string

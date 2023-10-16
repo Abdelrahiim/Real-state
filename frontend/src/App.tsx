@@ -14,12 +14,13 @@ import AuthProvider from "react-auth-kit/AuthProvider";
 import RequireAuth from "react-auth-kit/PrivateRoute";
 
 
+
 // @ts-ignore
 const router = createBrowserRouter([
   {
     path: '/',
     // @ts-ignore
-    element: <RequireAuth loginPath={"/sign-in"}><Layout/> </RequireAuth>,
+    element: <Layout/>,
     children: [
       {
         index: true,
@@ -31,22 +32,24 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <ProfilePage/>
+        element: <RequireAuth loginPath={"/sign-in"}><ProfilePage/></RequireAuth>
       },
       {
         path: "listing",
         children: [
           {
             index: true,
-            element: <CreateListing/>,
+            // @ts-ignore
+            element: <RequireAuth loginPath={"/sign-in"}><CreateListing/> </RequireAuth>
           },
           {
-            path: ":id",
+            path: ":listingId",
             element: <ListingDetail/>
           },
           {
-            path:":listingId/edit",
-            element:<UpdateListing />
+            path: ":listingId/edit",
+            // @ts-ignore
+            element: <RequireAuth loginPath={"/sign-in"}> <UpdateListing/> </RequireAuth>
           }
         ]
       },
@@ -66,15 +69,14 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <AuthProvider
-      authType={"cookie"}
-      authName={"_auth"}
-      cookieDomain={window.location.hostname}
-      cookieSecure={false}
-    >
-      <RouterProvider router={router}/>
-    </AuthProvider>
-
+      <AuthProvider
+        authType={"cookie"}
+        authName={"_auth"}
+        cookieDomain={window.location.hostname}
+        cookieSecure={false}
+      >
+        <RouterProvider router={router}/>
+      </AuthProvider>
 
   )
 }

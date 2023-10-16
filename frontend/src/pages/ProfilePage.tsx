@@ -5,12 +5,13 @@ import SignOut from "../components/SignOut.tsx";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
-import {deleteListing, getListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
+import {deleteListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
 import {updateStart, updateFailure, updateSuccess, Status} from "../features/user/userSlice.ts";
 import {AxiosError} from "axios";
 import DeleteUser from "../components/DeleteUser.tsx";
 import {Link} from "react-router-dom";
 import {Spinner} from "flowbite-react";
+import {useGetUserListingQuery} from "../services/ListingAPI.ts";
 
 
 const ProfilePage = () => {
@@ -24,6 +25,7 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState<UpdateFormData>({});
   const [showListingError, setShowListingError] = useState<null | string>(null)
   const [userListings, setUserListings] = useState<ListingResponse[]>([])
+  const {data, error: err, isError} = useGetUserListingQuery(null)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -70,21 +72,22 @@ const ProfilePage = () => {
   }, [file])
 
   const handleShowListings = async () => {
-    try {
-      setShowListingError(null)
-      const response = await getListing();
-      setUserListings(response.data)
 
-    } catch (err) {
-      const e = err as AxiosError<{ error: string }>
-      setShowListingError(e?.response?.data.error || e.message)
+    if (isError) {
+      // @ts-ignore
+      setShowListingError(err?.message)
+    } else {
+      setShowListingError(null)
     }
+    setUserListings(data as ListingResponse[])
+
+
   }
 
   const handleListingDelete = async (id: string) => {
     try {
       // @ts-ignore
-      const  _response = await deleteListing(id)
+      const _response = await deleteListing(id)
       setUserListings((prev) => prev.filter((listing) => listing._id !== id))
     } catch (err) {
       console.log(err)
