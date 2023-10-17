@@ -6,7 +6,7 @@ import chalk from "chalk";
 import {StatusCodes} from "http-status-codes";
 import {User} from "../../Types.ts";
 import {faker} from "@faker-js/faker"
-
+import MeiliSearch, {settingUpMeiliSearch} from "../../services/MeiliSearch.ts";
 
 const Client = supertest(app)
 
@@ -15,6 +15,8 @@ let currentUserId: string
 describe("Test Api User EndPoints", () => {
   beforeAll(() => {
     connectMongo()
+    const meiliSearch = MeiliSearch
+    settingUpMeiliSearch()
   })
   /**
    * Testing User Get endpoint

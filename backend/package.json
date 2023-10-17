@@ -29,6 +29,7 @@
     "http-errors": "^2.0.0",
     "http-status-codes": "^2.3.0",
     "jose": "^4.15.2",
+    "meilisearch": "^0.35.0",
     "mongoose": "^7.5.3",
     "morgan": "^1.10.0",
     "supertest": "^6.3.3"

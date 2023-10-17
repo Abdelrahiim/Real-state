@@ -36,3 +36,7 @@ export interface Listing{
   imageURL:Types.Array<string>
   userRef:string | Types.ObjectId
 }
+
+export interface ListingResponse extends Listing {
+  _id:Types.ObjectId |string
+}

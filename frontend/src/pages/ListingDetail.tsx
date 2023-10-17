@@ -34,7 +34,6 @@ const ListingDetail = () => {
 
   return (
     <div>
-      <div className={"mb-6"}>{listing && listing?.name}</div>
       {error && <p className={"text-red-700"}>{
         // @ts-ignore
         error?.response?.data?.error || error.message

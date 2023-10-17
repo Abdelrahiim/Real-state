@@ -48,6 +48,19 @@ describe("Testing List EndPoints", () => {
   })
 
   /**
+   * Test Search Listing
+   * GET /listing/search?params
+   */
+  describe(`Test ${chalk.greenBright("GET")} /api/listing/search?params`,()=>{
+    test(`it Should Return 200 Content-Type = Application/json ` ,async ()=>{
+      const response = await Client.get(`/api/listing/search?searchTerm=serendipity`)
+        .expect(StatusCodes.OK)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.regularPrice).toBe(200)
+    })
+  })
+
+  /**
    * It Returns Only Listing That The Register User Created
    * Test Get Listing EndPoints
    * GET /api/listing

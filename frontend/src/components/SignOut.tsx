@@ -10,7 +10,7 @@ const SignOut = () => {
       signOut()
       dispatch(signingOut())
 
-    }catch (e){
+    } catch (e){
       console.log(e)
     }
 

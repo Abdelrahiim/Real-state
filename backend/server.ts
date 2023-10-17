@@ -7,11 +7,13 @@ import cors from "./middlewares/cors.middleware.ts";
 
 import cookieParser from "cookie-parser"
 import ListingRouter from "./routes/listing/listing.router.ts";
-
+import {settingUpMeiliSearch} from "./services/MeiliSearch.ts";
+import MeiliSearch from "./services/MeiliSearch.ts"
 
 const PORT = process.env.PORT || 8000
 const app = express()
 
+const client = MeiliSearch
 
 
 app.use(helmet())
@@ -26,6 +28,9 @@ app.use("/api/listing",ListingRouter)
 
 
 await connectMongo()
+
+await settingUpMeiliSearch()
+
 
 app.listen(PORT, () => {
   console.log(`Development Server Started At PORT http://localhost:${PORT}`)

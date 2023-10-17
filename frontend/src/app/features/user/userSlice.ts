@@ -48,12 +48,18 @@ export const userSlice = createSlice({
     deleteStart: (state) => {
       state.status = Status.Submitting
     },
+    // deleteSuccess:(state)=>{
+    //   state.error = undefined
+    //   state.status = Status.Idle
+    // },
     deleteFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
       state.status = Status.Idle
     },
     signingOut: (state) => {
       state.currentUser = undefined
+      state.error = undefined
+      state.status = Status.Idle
     }
 
   }
@@ -68,6 +74,7 @@ export const {
   updateSuccess,
   updateFailure,
   deleteStart,
+  // deleteSuccess,
   deleteFailure
 } = userSlice.actions
 export default userSlice.reducer;
