@@ -1,7 +1,7 @@
 import {GoogleAuthProvider, getAuth, signInWithPopup} from "firebase/auth"
 import {app} from "../firebase.ts";
 import {signInGoogle} from "../api.ts";
-import {signInSuccess} from "../features/user/userSlice.ts";
+import {signInSuccess} from "../app/features/user/userSlice.ts";
 import {useDispatch} from "react-redux";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import {useNavigate} from "react-router-dom";

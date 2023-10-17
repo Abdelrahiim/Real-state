@@ -54,6 +54,7 @@ async function authenticateWithGoogle(userData: GoogleSignInUser) {
     const user = await findUser({email: userData.email})
 
     if (user) {
+
       // @ts-ignore
       const {password: pass, ...rest} = user._doc
       const token = await obtainToken(user._id)

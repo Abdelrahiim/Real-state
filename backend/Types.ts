@@ -1,5 +1,5 @@
 
-import { Types} from "mongoose";
+import { Types ,Document} from "mongoose";
 
 
 export interface SignInUser {
@@ -7,11 +7,14 @@ export interface SignInUser {
   password: string
 }
 
-export interface User extends SignInUser {
+export interface User extends  SignInUser  {
   username: string,
   avatar?:string
 }
 
+export  interface UserSchema extends Document , User{
+
+}
 export interface GoogleSignInUser{
   username:string
   email:string

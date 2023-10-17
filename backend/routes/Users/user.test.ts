@@ -87,6 +87,37 @@ describe("Test Api User EndPoints", () => {
   })
 
   /**
+   * Test Retrieve User EndPoint
+   * GET api/user/:id
+   */
+  describe(`Test ${chalk.greenBright("GET")} /api/user/userId`,()=>{
+    test("it Should Return 200 and Content-Type = Application/json",async ()=>{
+      const userID = "65233d99c057b1351ba45e3f"
+      const response = await Client.get(`/api/user/${userID}`)
+        .set("Cookie", [`_auth=${token}`])
+        .expect(StatusCodes.OK)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.username).toBe("infinity2070")
+    })
+    test("it Should Return 404 Not Found",async ()=>{
+      const userID = "65233d99c057b1351ba45e3f"
+      const response = await Client.get(`/api/user/${userID}123`)
+        .set("Cookie", [`_auth=${token}`])
+        .expect(StatusCodes.NOT_FOUND)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.error).toBe("Not Found")
+    })
+    test("it Should Return 401 UnAuthorized",async ()=>{
+      const userID = "65233d99c057b1351ba45e3f"
+      const response = await Client.get(`/api/user/${userID}`)
+        .expect(StatusCodes.UNAUTHORIZED)
+        .expect('Content-Type', /application\/json/)
+      expect(response.body.error).toBe("UnAuthorized")
+    })
+  })
+
+
+  /**
    * Test Update User End Points
    * PUT api.user/update/userId
    */
@@ -110,6 +141,7 @@ describe("Test Api User EndPoints", () => {
       expect(response.body.error).toBe("UnAuthorized")
     })
   })
+
 
 
   /**

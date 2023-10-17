@@ -6,12 +6,12 @@ import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/st
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
 import {deleteListing, ListingResponse, UpdateFormData, updateProfile} from "../api.ts";
-import {updateStart, updateFailure, updateSuccess, Status} from "../features/user/userSlice.ts";
+import {updateStart, updateFailure, updateSuccess, Status} from "../app/features/user/userSlice.ts";
 import {AxiosError} from "axios";
 import DeleteUser from "../components/DeleteUser.tsx";
 import {Link} from "react-router-dom";
 import {Spinner} from "flowbite-react";
-import {useGetUserListingQuery} from "../services/ListingAPI.ts";
+import {useGetUserListingQuery} from "../app/services/ListingAPI.ts";
 
 
 const ProfilePage = () => {

@@ -3,7 +3,7 @@ import {Button, Modal, Spinner} from 'flowbite-react';
 import {HiOutlineExclamationCircle} from "react-icons/hi";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../app/store.ts";
-import {deleteFailure, deleteStart,  signingOut, Status} from "../features/user/userSlice.ts";
+import {deleteFailure, deleteStart,  signingOut, Status} from "../app/features/user/userSlice.ts";
 import {deleteProfile} from "../api.ts";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import {AxiosError} from "axios";

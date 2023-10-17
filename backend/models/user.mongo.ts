@@ -1,8 +1,8 @@
 import {Schema, model} from "mongoose";
-import {User} from "../Types.ts";
+import {User, UserSchema} from "../Types.ts";
 
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<UserSchema>({
   username: {
     type: String,
     require: true,
@@ -23,4 +23,4 @@ const userSchema = new Schema<User>({
   }
 }, {timestamps: true})
 
-export default model("User", userSchema)
+export default model<UserSchema>("User", userSchema)

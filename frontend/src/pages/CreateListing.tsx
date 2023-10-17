@@ -5,7 +5,7 @@ import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
 import {createListingApi, Listing} from "../api.ts";
 import {AxiosError} from "axios";
-import {Status} from "../features/user/userSlice.ts";
+import {Status} from "../app/features/user/userSlice.ts";
 import {useNavigate } from "react-router-dom";
 
 

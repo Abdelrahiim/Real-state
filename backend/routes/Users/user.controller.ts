@@ -10,7 +10,7 @@ import {
 
 } from "../../models/user.model.ts";
 import {BadRequest} from "http-errors";
-import {faker} from "@faker-js/faker";
+import {faker, tr} from "@faker-js/faker";
 import {HTTPException} from "../../middlewares/error.middleware.ts";
 import {CustomRequest} from "../../middlewares/verifyToken.middleware.ts";
 import chalk from "chalk";
@@ -62,6 +62,17 @@ async function signInWithGoogle(req: Request<{}, {}, GoogleSignInUser>, res: Res
     return res.status(e.statusCode).json({error: e.message})
   }
 }
+async function retrieve(req:Request<{id:string}>,res:Response){
+  try{
+    const user = await findUser({_id:req.params.id})
+
+    // @ts-ignore
+    const {password: pass, ...rest} = user?._doc
+    return res.status(StatusCodes.OK).json(rest)
+  } catch (e){
+    res.status(StatusCodes.NOT_FOUND).json({error:"Not Found"})
+  }
+}
 
 
 async function update(req:Request<{id:string},{},User>,res:Response){
@@ -99,5 +110,6 @@ export default {
   list,
   update,
   destroy,
+  retrieve,
   signInWithGoogle
 }

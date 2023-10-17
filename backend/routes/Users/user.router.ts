@@ -11,7 +11,10 @@ UserRouter.post("/auth/google",UserController.signInWithGoogle )
 
 UserRouter.put("/update/:id",VerifyTokenMiddleware,UserController.update)
 UserRouter.delete("/delete/:id",VerifyTokenMiddleware,UserController.destroy)
+
+UserRouter.get("/:id",VerifyTokenMiddleware,UserController.retrieve)
 // just For
 UserRouter.get('/',VerifyTokenMiddleware,UserController.list)
+
 
 export default UserRouter

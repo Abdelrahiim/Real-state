@@ -56,7 +56,8 @@ export interface Listing {
 }
 
 export interface ListingResponse extends Listing {
-  _id: string
+  _id: string,
+  userRef:string
 }
 
 

@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {User} from "../../api.ts";
+import {User} from "../../../api.ts";
 
 export enum Status {
   Idle = "idle",

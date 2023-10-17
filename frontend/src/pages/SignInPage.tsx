@@ -3,7 +3,7 @@ import {SignInData, signInUser,} from "../api.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AxiosError} from "axios";
-import {signInStart, signInFailure, signInSuccess, Status} from "../features/user/userSlice.ts";
+import {signInStart, signInFailure, signInSuccess, Status} from "../app/features/user/userSlice.ts";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import {RootState} from "../app/store.ts";
 import Oauth from "../components/Oauth.tsx";

@@ -1,8 +1,8 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit'
-import userReducer from "../features/user/userSlice.ts"
+import userReducer from "./features/user/userSlice.ts"
 import {persistReducer, persistStore} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import {ListingAPI} from "../services/ListingAPI.ts";
+import {ListingAPI} from "./services/ListingAPI.ts";
 
 
 const rootReducer = combineReducers({

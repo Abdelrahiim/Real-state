@@ -1,5 +1,5 @@
 import {FileInput, Spinner} from "flowbite-react";
-import {Status} from "../features/user/userSlice.ts";
+import {Status} from "../app/features/user/userSlice.ts";
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {Listing, updateListing} from "../api.ts";
 import {useNavigate, useParams} from "react-router-dom";
@@ -7,7 +7,7 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/st
 import {app} from "../firebase.ts";
 import {generateUniqueFileName} from "../utils.ts";
 import {AxiosError} from "axios";
-import {useGetListingDetailsQuery} from "../services/ListingAPI.ts";
+import {useGetListingDetailsQuery} from "../app/services/ListingAPI.ts";
 
 
 

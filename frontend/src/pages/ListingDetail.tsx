@@ -1,25 +1,37 @@
 import {useParams} from "react-router-dom";
 
-import {useGetListingDetailsQuery} from "../services/ListingAPI.ts";
+import {useGetListingDetailsQuery} from "../app/services/ListingAPI.ts";
 import {Spinner} from "flowbite-react";
 import SwiperCore from "swiper"
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation} from "swiper/modules";
 import 'swiper/css/bundle';
 import {FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking} from "react-icons/fa";
+import {useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
+import {useState} from "react";
+import Contact from "../components/Contact.tsx";
+import {ListingResponse} from "../api.ts";
 
 
 const ListingDetail = () => {
   SwiperCore.use([Navigation]);
   const {listingId} = useParams<{ listingId: string }>()
   const {data: listing, isFetching, error} = useGetListingDetailsQuery(listingId as string)
+  const {currentUser} = useSelector((state: RootState) => state.user)
+  const [contact,setContact] = useState(false)
+
+  const closeContact = () =>{
+    setContact(false)
+  }
 
   if (isFetching) {
     return <div className={"flex items-center justify-center"}>
       <Spinner size={"lg"}/>
     </div>
   }
-  // @ts-ignore
+
+
   return (
     <div>
       <div className={"mb-6"}>{listing && listing?.name}</div>
@@ -82,13 +94,25 @@ const ListingDetail = () => {
           </li>
           <li className={"flex items-center gap-1 whitespace-nowrap "}>
             <FaParking className={"text-lg"}/>
-            {listing?.parking  ? `Parking` : `No Parking`}
+            {listing?.parking ? `Parking` : `No Parking`}
           </li>
           <li className={"flex items-center gap-1 whitespace-nowrap "}>
             <FaChair className={"text-lg"}/>
-            {listing?.furnished  ? `Furnished` : `Not Furnished`}
+            {listing?.furnished ? `Furnished` : `Not Furnished`}
           </li>
         </ul>
+        {
+          currentUser
+          && currentUser._id !== listing?.userRef
+          && !contact &&
+            <button onClick={()=>{
+              setContact(true)
+            }} className={"bg-slate-700 rounded-lg text-white uppercase hover:opacity-95 p-3 "}>Contact
+                LandLord</button>
+        }
+        {
+          contact && <Contact listing={listing as ListingResponse} closeContact={closeContact}/>
+        }
       </div>
     </div>
   );

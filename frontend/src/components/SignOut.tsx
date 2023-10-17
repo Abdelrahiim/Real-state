@@ -1,6 +1,6 @@
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import {useDispatch} from "react-redux";
-import {signingOut} from "../features/user/userSlice.ts";
+import {signingOut} from "../app/features/user/userSlice.ts";
 
 const SignOut = () => {
   const signOut = useSignOut()
