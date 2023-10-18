@@ -8,7 +8,7 @@ import {
   SignUpPage,
   CreateListing,
   ListingDetail,
-  UpdateListing
+  UpdateListing, Search
 } from "./pages";
 import AuthProvider from "react-auth-kit/AuthProvider";
 import RequireAuth from "react-auth-kit/PrivateRoute";
@@ -53,6 +53,10 @@ const router = createBrowserRouter([
           }
         ]
       },
+      {
+        path:"search",
+        element:<Search/>
+      }
 
     ]
   },

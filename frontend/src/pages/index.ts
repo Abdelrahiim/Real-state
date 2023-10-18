@@ -6,4 +6,5 @@ export {default as SignUpPage} from "./SignUpPage"
 export {default as CreateListing} from "./CreateListing"
 export {default as ListingDetail} from "./ListingDetail.tsx"
 export {default as UpdateListing} from "./UpdateListing.tsx"
+export {default as Search} from "./Search.tsx"
 
