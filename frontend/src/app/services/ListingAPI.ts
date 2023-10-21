@@ -19,6 +19,9 @@ export const ListingAPI = createApi(
       }),
       getListingOwner: builder.query<User, string>({
         query: (userID: string) => (`/user/${userID}`)
+      }),
+      searchListing: builder.query<ListingResponse[], string>({
+        query: (urlParams: string) => (`/listing/search/?${urlParams}`)
       })
 
     })
@@ -26,4 +29,4 @@ export const ListingAPI = createApi(
 )
 export const {
   useGetListingDetailsQuery, useGetUserListingQuery, useGetListingOwnerQuery
-} = ListingAPI
+,useSearchListingQuery} = ListingAPI

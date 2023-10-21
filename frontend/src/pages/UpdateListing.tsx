@@ -5,7 +5,7 @@ import {Listing, updateListing} from "../api.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import {app} from "../firebase.ts";
-import {generateUniqueFileName} from "../utils.ts";
+import {generateUniqueFileName, isHTMLTextAreaElement} from "../utils.ts";
 import {AxiosError} from "axios";
 import {useGetListingDetailsQuery} from "../app/services/ListingAPI.ts";
 
@@ -110,9 +110,7 @@ const UpdateListing = () => {
 
   }
 
-  function isHTMLTextAreaElement(element: any): element is HTMLTextAreaElement {
-    return element instanceof HTMLTextAreaElement;
-  }
+
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (isHTMLTextAreaElement(e.target)) {

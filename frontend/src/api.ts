@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 
 
+
 export const baseUrl = "/api"
 
 export interface LoginData {
@@ -57,9 +58,19 @@ export interface Listing {
 
 export interface ListingResponse extends Listing {
   _id: string,
-  userRef:string
+  userRef: string
 }
 
+
+export interface SearchForm {
+  searchTerm: string,
+  type: string,
+  parking?: boolean,
+  furnished?: boolean,
+  offer?: boolean,
+  sort?: string,
+  order?: string
+}
 
 export const signupUser = async (credentials: LoginData) => {
   try {
@@ -121,7 +132,6 @@ export const createListingApi = async (listing: Listing) => {
 }
 
 
-
 export const getListing = async () => {
   try {
     return await axios.get(`${baseUrl}/listing`) as AxiosResponse<ListingResponse[]>
@@ -130,7 +140,7 @@ export const getListing = async () => {
   }
 }
 
-export const retrieveListing = async (id: string ) => {
+export const retrieveListing = async (id: string) => {
   try {
     return await axios.get(`${baseUrl}/listing/${id}/`)
   } catch (err) {
@@ -140,9 +150,9 @@ export const retrieveListing = async (id: string ) => {
 }
 
 
-export const updateListing =  async (listing:Listing,id:string)=>{
+export const updateListing = async (listing: Listing, id: string) => {
   try {
-    return await axios.put(`${baseUrl}/listing/${id}/`,listing) as AxiosResponse<ListingResponse>
+    return await axios.put(`${baseUrl}/listing/${id}/`, listing) as AxiosResponse<ListingResponse>
   } catch (e) {
 
   }

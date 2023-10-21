@@ -2,7 +2,7 @@ import {FileInput} from "flowbite-react";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import {app} from "../firebase.ts";
-import {generateUniqueFileName} from "../utils.ts";
+import {generateUniqueFileName, isHTMLTextAreaElement} from "../utils.ts";
 import {createListingApi, Listing} from "../api.ts";
 import {AxiosError} from "axios";
 import {Status} from "../app/features/user/userSlice.ts";
@@ -87,9 +87,6 @@ const CreateListing = () => {
 
   }
 
-  function isHTMLTextAreaElement(element: any): element is HTMLTextAreaElement {
-    return element instanceof HTMLTextAreaElement;
-  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (isHTMLTextAreaElement(e.target)) {

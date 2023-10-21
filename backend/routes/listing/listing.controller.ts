@@ -82,7 +82,7 @@ async function search(req: Request<{}, {}, {}, {
   try {
     const result = await searchAndFilter(
       req.query.searchTerm,
-      Number(req.query.limit) ,
+      Number(req.query.limit) || 10,
       offerFilter,
       parkingFilter,
       furnishedFilter,
