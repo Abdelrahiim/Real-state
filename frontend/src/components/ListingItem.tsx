@@ -38,7 +38,6 @@ const ListingItem = ({listing}: { listing: ListingResponse }) => {
           </div>
         </div>
       </Link>
-
     </div>
   )
 };
